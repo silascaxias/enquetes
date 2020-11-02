@@ -40,12 +40,14 @@ export default StyleSheet.create({
   scrollViewContainer: {
     flex: 1,
     marginTop: 10,
+    padding: 10,
     flexDirection: 'column',
   },
   optionList: {
     fontSize: 18,
-    padding: 5,
     color: '#3d3d3d',
+    padding: 5,
+    paddingBottom: 10,
   },
   buttonSave: {
     marginBottom: 40,
