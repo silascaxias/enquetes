@@ -1,1 +1,3 @@
-export const SET_POLLS = 'SET_POLLS';
+export const POLLS_LOADING = 'POLLS_LOADING';
+export const POLLS_SUCCESS = 'POLLS_SUCCESS';
+export const POLLS_ERROR = 'POLLS_ERROR';

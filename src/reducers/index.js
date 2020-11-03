@@ -1,4 +1,5 @@
-import {createStore, combineReducers} from 'redux';
+import {createStore, applyMiddleware, combineReducers} from 'redux';
+import thunk from 'redux-thunk';
 import pollListReducer from './PollList';
 import pollVoteReducer from './PollVote';
 import pollDetailsReducer from './PollDetails';
@@ -9,6 +10,6 @@ const rootReducer = combineReducers({
   pollDetailsReducer: pollDetailsReducer,
 });
 
-const configureStore = () => createStore(rootReducer);
+const configureStore = () => createStore(rootReducer, applyMiddleware(thunk));
 
 export default configureStore;
