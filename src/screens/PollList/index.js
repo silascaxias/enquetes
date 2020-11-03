@@ -46,8 +46,8 @@ class PollList extends Component {
   render() {
     if (this.props.error != null) {
       return (
-        <View style={[styles.indicatorContainer, styles.indicatorHorizontal]}>
-          <Text>{this.props.error}</Text>
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>{this.props.error}</Text>
         </View>
       );
     }

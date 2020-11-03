@@ -6,11 +6,12 @@ export const fetchPolls = () => {
   return (dispatch, getState) => {
     dispatch(fetchPollsLoading());
 
-    NetInfo.fetch().then((isConnected) => {
-      if (!isConnected) {
+    NetInfo.fetch().then((state) => {
+      if (!state.isConnected) {
         dispatch(
           fetchPollsError('Erro ao conectar-se, verifique a sua conexão!'),
         );
+        return;
       }
 
       api

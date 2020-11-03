@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import {Text, RadioButton} from 'react-native-paper';
+import {RadioButton, Text} from 'react-native-paper';
 import * as strings from './strings';
 
 import styles from './styles';
