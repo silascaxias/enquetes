@@ -99,4 +99,15 @@ export default StyleSheet.create({
     justifyContent: 'space-around',
     padding: 10,
   },
+  errorContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
+  },
+  errorText: {
+    alignSelf: 'center',
+    padding: 20,
+    fontSize: 20,
+    color: '#DA552F',
+  },
 });

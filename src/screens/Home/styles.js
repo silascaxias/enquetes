@@ -34,7 +34,7 @@ export default StyleSheet.create({
   },
   textWelcome: {
     flexDirection: 'row',
-    fontSize: 30,
+    fontSize: 25,
     marginTop: 20,
     marginLeft: 40,
     color: '#3d3d3d',

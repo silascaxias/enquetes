@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import {Text, RadioButton} from 'react-native-paper';
+import {RadioButton, Text} from 'react-native-paper';
 import * as strings from './strings';
 
 import styles from './styles';
@@ -72,17 +72,20 @@ class PollVote extends Component {
     }
   };
 
+  setSelected = (selectedID) => {
+    this.setState({selectedID: selectedID});
+  }
+
   componentDidMount() {
     this.fetchPoll();
   }
 
+  
   renderButton = (option, index) => (
     <View style={styles.rowContainer} key={option.option_id}>
       <TouchableOpacity
         style={{flex: 1}}
-        onPress={() => {
-          this.setState({selectedID: option.option_id});
-        }}>
+        onPress={() => this.setSelected(option.option_id)}>
         <Text style={styles.pollOption}>
           {index + 1}. {option.option_description}
         </Text>
@@ -90,6 +93,7 @@ class PollVote extends Component {
       <RadioButton
         color="#DA552F"
         value={option.option_id}
+        onPress={() => this.setSelected(option.option_id)}
         status={
           this.state.selectedID === option.option_id ? 'checked' : 'unchecked'
         }

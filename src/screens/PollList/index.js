@@ -5,11 +5,9 @@ import {
   FlatList,
   TouchableOpacity,
   ActivityIndicator,
-  Alert,
 } from 'react-native';
 import {connect} from 'react-redux';
-import api from '../../network/api';
-import {setPolls} from '../../actions/PollList';
+import {fetchPolls} from '../../actions/PollList';
 import {setSelectedID} from '../../actions/PollVote';
 import {setPoll} from '../../actions/PollDetails';
 import styles from './styles';
@@ -20,32 +18,8 @@ class PollList extends Component {
     title: strings.title,
   };
 
-  state = {
-    isLoading: true,
-  };
-
-  fetchPolls = async () => {
-    try {
-      const response = await api.get('/poll');
-
-      if (response.ok) {
-        this.props.setPolls(response.data.reverse());
-        this.setState({isLoading: false});
-      } else {
-        this.setState({isLoading: false});
-        const serverError = response.data.error;
-        Alert.alert(
-          serverError != null ? serverError : response.originalError.message,
-        );
-      }
-    } catch (err) {
-      this.setState({isLoading: false});
-      Alert.alert(err.error.toString());
-    }
-  };
-
   componentDidMount() {
-    this.fetchPolls();
+    this.props.fetchPolls();
   }
 
   renderItem = ({item}) => (
@@ -70,7 +44,15 @@ class PollList extends Component {
   );
 
   render() {
-    return this.state.isLoading ? (
+    if (this.props.error != null) {
+      return (
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>{this.props.error}</Text>
+        </View>
+      );
+    }
+
+    return this.props.isLoading ? (
       <View style={[styles.indicatorContainer, styles.indicatorHorizontal]}>
         <ActivityIndicator size="large" color="#DA552F" />
       </View>
@@ -94,12 +76,14 @@ class PollList extends Component {
 const mapStateToProps = (state) => {
   return {
     pollsList: state.pollListReducer.pollsList,
+    isLoading: state.pollListReducer.isLoading,
+    error: state.pollListReducer.error,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    setPolls: (polls) => dispatch(setPolls(polls)),
+    fetchPolls: () => dispatch(fetchPolls()),
     setSelectID: (id) => dispatch(setSelectedID(id)),
     setPoll: (pollStats) => dispatch(setPoll(pollStats)),
   };
