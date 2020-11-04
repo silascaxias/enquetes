@@ -37,7 +37,7 @@ export const sendVote = (poll_id, selectedID) => {
 
 export const resetState = () => ({
   type: RESET_STATE,
-})
+});
 
 const voteSuccess = () => ({
   type: VOTE_SUCCESS,
