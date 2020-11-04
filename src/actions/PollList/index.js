@@ -3,7 +3,7 @@ import NetInfo from '@react-native-community/netinfo';
 import api from '../../network/api';
 
 export const fetchPolls = () => {
-  return (dispatch, getState) => {
+  return (dispatch) => {
     dispatch(fetchPollsLoading());
 
     NetInfo.fetch().then((state) => {

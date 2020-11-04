@@ -1,15 +1,10 @@
 import React, {Component} from 'react';
-import {
-  View,
-  Text,
-  FlatList,
-  TouchableOpacity,
-  ActivityIndicator,
-} from 'react-native';
+import {View, Text, FlatList, ActivityIndicator} from 'react-native';
 import {connect} from 'react-redux';
 import {fetchPolls} from '../../actions/PollList';
-import {setSelectedID} from '../../actions/PollVote';
-import {setPoll} from '../../actions/PollDetails';
+import {setPollDetails} from '../../actions/PollDetails';
+import {setPollVote} from '../../actions/PollVote';
+import ListItem from '../../components/listItem.component';
 import styles from './styles';
 import * as strings from './strings';
 
@@ -23,24 +18,19 @@ class PollList extends Component {
   }
 
   renderItem = ({item}) => (
-    <TouchableOpacity
-      onPress={() => {
+    <ListItem
+      title={item.poll_description}
+      description={item.poll_id}
+      buttonText={strings.vote}
+      onPressCell={() => {
         this.props.navigation.navigate('PollDetails');
-        this.props.setPoll(item);
+        this.props.setPollDetails(item);
       }}
-      style={styles.pollContainer}>
-      <Text style={styles.todoTitle}>{item.poll_description}</Text>
-      <Text style={styles.productDescription}>{item.poll_id}</Text>
-
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => {
-          this.props.navigation.navigate('PollVote');
-          this.props.setSelectID(item.poll_id);
-        }}>
-        <Text style={styles.buttonText}>{strings.vote}</Text>
-      </TouchableOpacity>
-    </TouchableOpacity>
+      onPressButton={() => {
+        this.props.navigation.navigate('PollVote');
+        this.props.setPollVote(item);
+      }}
+    />
   );
 
   render() {
@@ -84,8 +74,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchPolls: () => dispatch(fetchPolls()),
-    setSelectID: (id) => dispatch(setSelectedID(id)),
-    setPoll: (pollStats) => dispatch(setPoll(pollStats)),
+    setPollDetails: (poll) => dispatch(setPollDetails(poll)),
+    setPollVote: (poll) => dispatch(setPollVote(poll)),
   };
 };
 
