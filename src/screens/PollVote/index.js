@@ -5,8 +5,9 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   ScrollView,
+  Text,
 } from 'react-native';
-import {RadioButton, Text} from 'react-native-paper';
+import {RadioButton} from 'react-native-paper';
 import * as strings from './strings';
 
 import styles from './styles';
@@ -57,7 +58,7 @@ class PollVote extends Component {
     if (this.state.isLoading) {
       if (this.props.response != null) {
         if (this.props.response) {
-          Alert.alert('Voto computado com sucesso!', null, [
+          Alert.alert(strings.successVote, null, [
             {
               text: 'OK',
               onPress: () => {

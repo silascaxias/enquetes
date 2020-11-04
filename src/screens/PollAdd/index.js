@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 
+import * as strings from './strings';
 import styles from './styles';
 import globalStyles from './../../resources/styles';
 
@@ -16,7 +17,7 @@ import api from '../../network/api';
 
 class PollAdd extends Component {
   static navigationOptions = {
-    title: 'Nova Enquete',
+    title: strings.title,
   };
 
   state = {
@@ -28,7 +29,7 @@ class PollAdd extends Component {
 
   addOption = () => {
     if (this.state.optionDescription.length === 0) {
-      return Alert.alert('Adicione uma descrição para a opção!');
+      return Alert.alert(strings.withoutDescription);
     }
 
     this.setState({
@@ -40,10 +41,10 @@ class PollAdd extends Component {
 
   savePoll = async () => {
     if (this.state.pollDescription === '') {
-      return Alert.alert('Insira um titulo!');
+      return Alert.alert(strings.withoutTitle);
     }
     if (this.state.options.length < 2) {
-      return Alert.alert('Insira pelo menos 2 opções!');
+      return Alert.alert(strings.withoutOptions);
     }
 
     try {
@@ -58,7 +59,7 @@ class PollAdd extends Component {
 
       if (response.ok) {
         this.setState({isLoading: false});
-        Alert.alert('Enquete inserida com sucesso!');
+        Alert.alert(strings.addSuccess);
         this.props.navigation.navigate('Home');
       } else {
         this.setState({isLoading: false});
@@ -79,20 +80,20 @@ class PollAdd extends Component {
       </View>
     ) : (
       <View style={styles.container}>
-        <Text style={styles.fieldDescription}>Titulo:</Text>
+        <Text style={styles.fieldDescription}>{strings.labelTitle}</Text>
         <View style={[globalStyles.defaultBorder, styles.additionalContainer]}>
           <TextInput
             style={styles.addInput}
-            placeholder={'Insira um titulo...'}
+            placeholder={strings.titlePlaceHolder}
             value={this.state.pollDescription}
             onChangeText={(text) => this.setState({pollDescription: text})}
           />
         </View>
-        <Text style={styles.fieldDescription}>Nova Opção:</Text>
+        <Text style={styles.fieldDescription}>{strings.newOption}</Text>
         <View style={[globalStyles.defaultBorder, styles.additionalContainer]}>
           <TextInput
             style={styles.optionInput}
-            placeholder={'Insira uma opção...'}
+            placeholder={strings.optionPlaceHolder}
             value={this.state.optionDescription}
             onChangeText={(text) => this.setState({optionDescription: text})}
           />
@@ -126,7 +127,9 @@ class PollAdd extends Component {
               styles.textEmptyContainer,
             ]}>
             <View style={styles.textEmptyContainer}>
-              <Text style={styles.textEmptyOptions}>Nenhuma opção criada!</Text>
+              <Text style={styles.textEmptyOptions}>
+                {strings.emptyOptions}
+              </Text>
             </View>
           </View>
         )}
@@ -142,7 +145,7 @@ class PollAdd extends Component {
               styles.additionalContainer,
               styles.buttonSave,
             ]}>
-            <Text style={styles.buttonSaveText}>Salvar</Text>
+            <Text style={styles.buttonSaveText}>{strings.save}</Text>
           </View>
         </TouchableOpacity>
       </View>

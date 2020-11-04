@@ -1,10 +1,11 @@
 import React, {Component} from 'react';
 import {Text, View, TouchableOpacity} from 'react-native';
 import styles from './styles';
+import * as strings from './strings';
 
 class Home extends Component {
   static navigationOptions = {
-    title: 'Home',
+    title: strings.title,
   };
 
   state = {
@@ -25,7 +26,7 @@ class Home extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.textWelcome}>Bem-vindo ...</Text>
+        <Text style={styles.textWelcome}>{strings.welcome}</Text>
         <View style={styles.menuContainer}>
           {this.state.menus.map((item) => (
             <TouchableOpacity
