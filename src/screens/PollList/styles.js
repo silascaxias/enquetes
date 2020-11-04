@@ -14,19 +14,6 @@ export default StyleSheet.create({
     marginTop: 20,
     marginBottom: 20,
   },
-  pollContainer: {
-    alignContent: 'stretch',
-    backgroundColor: '#FFF',
-    borderWidth: 1,
-    padding: 20,
-    margin: 10,
-    borderColor: '#ccc',
-    elevation: 10,
-    borderRadius: 12,
-    shadowOffset: {width: 2, height: 2},
-    shadowColor: '#DA552F',
-    shadowOpacity: 10.0,
-  },
   listContainer: {
     flex: 1,
     backgroundColor: 'transparent',
@@ -53,12 +40,6 @@ export default StyleSheet.create({
     padding: 5,
     margin: 25,
   },
-  todoTitle: {
-    flex: 3,
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#3d3d3d',
-  },
   addButton: {
     flex: 1,
     height: 50,
@@ -83,12 +64,6 @@ export default StyleSheet.create({
     fontSize: 16,
     color: '#DA552F',
     fontWeight: 'bold',
-  },
-  productDescription: {
-    fontSize: 16,
-    color: '#999',
-    marginTop: 5,
-    lineHeight: 24,
   },
   indicatorContainer: {
     flex: 1,
