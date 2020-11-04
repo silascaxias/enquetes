@@ -1,2 +1,4 @@
 export const SET_POLL = 'SET_POLL';
-export const SET_POLL_STATS = 'SET_POLL_STATS';
+export const POLL_STATS_LOADING = 'POLL_STATS_LOADING';
+export const POLL_STATS_SUCCESS = 'POLL_STATS_SUCCESS';
+export const POLL_STATS_ERROR = 'POLL_STATS_ERROR';
