@@ -14,7 +14,7 @@ import styles from './styles';
 import globalStyles from './../../resources/styles';
 import {connect} from 'react-redux';
 import {fetchPolls} from '../../actions/PollList';
-import {sendVote, resetState} from '../../actions/PollVote';
+import {sendVote, voteResetState} from '../../actions/PollVote';
 
 class PollVote extends Component {
   static navigationOptions = {
@@ -27,7 +27,7 @@ class PollVote extends Component {
   };
 
   componentDidMount() {
-    this.props.resetState();
+    this.props.voteResetState();
   }
 
   setSelected = (selectedID) => {
@@ -73,7 +73,7 @@ class PollVote extends Component {
               text: 'OK',
               onPress: () => {
                 this.setState({isLoading: false});
-                this.props.resetState();
+                this.props.voteResetState();
               },
             },
           ]);
@@ -127,7 +127,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     fetchPolls: () => dispatch(fetchPolls()),
     sendVote: (poll_id, selectID) => dispatch(sendVote(poll_id, selectID)),
-    resetState: () => dispatch(resetState()),
+    voteResetState: () => dispatch(voteResetState()),
   };
 };
 

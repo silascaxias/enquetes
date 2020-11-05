@@ -1,0 +1,7 @@
+{
+  "name": "Enquetes",
+  "displayName": "Enquetes",
+  "ios": {
+    "bundleIdentifier": "yes"
+  }
+}
