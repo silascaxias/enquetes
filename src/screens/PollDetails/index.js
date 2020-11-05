@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {useEffect} from 'react';
 import {Text, Alert, View, ActivityIndicator} from 'react-native';
 import * as strings from './strings';
 
@@ -10,72 +10,63 @@ import {fetchPollStats} from '../../actions/PollDetails';
 
 import PieChartDefault from '../../components/pieChart.component';
 
-class PollDetails extends Component {
-  static navigationOptions = {
-    title: strings.title,
-  };
+PollDetails.navigationOptions = () => ({
+  title: strings.title,
+});
 
-  componentDidMount() {
-    this.props.fetchPollStats(this.props.poll.poll_id);
-  }
+function PollDetails(props) {
+  useEffect(() => {
+    props.fetchPollStats(props.poll.poll_id);
+  }, []);
 
-  render() {
-    const optionsStats =
-      this.props.pollStats != null ? this.props.pollStats.votes : [];
-    const optionsPoll = this.props.poll != null ? this.props.poll.options : [];
+  const optionsStats = props.pollStats != null ? props.pollStats.votes : [];
+  const optionsPoll = props.poll != null ? props.poll.options : [];
 
-    const arrayItems = optionsStats.map((opt, index) => ({
-      label: optionsPoll != null ? [index].option_description : '',
-      value: opt.qty,
-      onPress: () => {
-        Alert.alert(
-          `${optionsPoll[index].option_description} - ${opt.qty} votos`,
-        );
-      },
-      key: `pie-${index}`,
-    }));
-
-    if (this.props.error != null) {
-      return (
-        <View style={styles.textEmptyContainer}>
-          <Text style={styles.textEmptyVotes}>{this.props.error}</Text>
-        </View>
+  const arrayItems = optionsStats.map((opt, index) => ({
+    label: optionsPoll != null ? [index].option_description : '',
+    value: opt.qty,
+    onPress: () => {
+      Alert.alert(
+        `${optionsPoll[index].option_description} - ${opt.qty} votos`,
       );
-    }
+    },
+    key: `pie-${index}`,
+  }));
 
+  if (props.error != null) {
     return (
-      <>
-        <View style={[globalStyles.defaultBorder, styles.additionalContainer]}>
-          <Text style={styles.pollTitle}>
-            {this.props.poll.poll_description}
-          </Text>
-        </View>
-        {this.props.isLoading ? (
-          <View style={[styles.indicatorContainer, styles.indicatorHorizontal]}>
-            <ActivityIndicator size="large" color="#DA552F" />
-          </View>
-        ) : optionsStats.map((opt) => opt.qty).reduce((a, b) => a + b, 0) >
-          0 ? (
-          <View
-            style={[
-              globalStyles.defaultBorder,
-              styles.additionalContainer,
-              styles.chartContainer,
-            ]}>
-            <PieChartDefault
-              chartStyle={styles.chart}
-              arrayItems={arrayItems}
-            />
-            <Text style={styles.chartFooter}>{strings.chartFooter}</Text>
-          </View>
-        ) : (
-          <View style={styles.textEmptyContainer}>
-            <Text style={styles.textEmptyVotes}>{strings.textEmpty}</Text>
-          </View>
-        )}
-      </>
+      <View style={styles.textEmptyContainer}>
+        <Text style={styles.textEmptyVotes}>{props.error}</Text>
+      </View>
     );
   }
+
+  return (
+    <>
+      <View style={[globalStyles.defaultBorder, styles.additionalContainer]}>
+        <Text style={styles.pollTitle}>{props.poll.poll_description}</Text>
+      </View>
+      {props.isLoading ? (
+        <View style={[styles.indicatorContainer, styles.indicatorHorizontal]}>
+          <ActivityIndicator size="large" color="#DA552F" />
+        </View>
+      ) : optionsStats.map((opt) => opt.qty).reduce((a, b) => a + b, 0) > 0 ? (
+        <View
+          style={[
+            globalStyles.defaultBorder,
+            styles.additionalContainer,
+            styles.chartContainer,
+          ]}>
+          <PieChartDefault chartStyle={styles.chart} arrayItems={arrayItems} />
+          <Text style={styles.chartFooter}>{strings.chartFooter}</Text>
+        </View>
+      ) : (
+        <View style={styles.textEmptyContainer}>
+          <Text style={styles.textEmptyVotes}>{strings.textEmpty}</Text>
+        </View>
+      )}
+    </>
+  );
 }
 
 const mapStateToProps = (state) => {

@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Alert,
   View,
@@ -16,29 +16,27 @@ import {connect} from 'react-redux';
 import {fetchPolls} from '../../actions/PollList';
 import {sendVote, voteResetState} from '../../actions/PollVote';
 
-class PollVote extends Component {
-  static navigationOptions = {
-    title: strings.title,
+PollVote.navigationOptions = () => ({
+  title: strings.title,
+});
+
+function PollVote(props) {
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedID, setSelectedID] = useState(null);
+
+  useEffect(() => {
+    props.voteResetState();
+  },[]);
+
+  const setSelected = (id) => {
+    setSelectedID(id);
   };
 
-  state = {
-    isLoading: false,
-    selectedID: null,
-  };
-
-  componentDidMount() {
-    this.props.voteResetState();
-  }
-
-  setSelected = (selectedID) => {
-    this.setState({selectedID: selectedID});
-  };
-
-  renderButton = (option, index) => (
+  const renderButton = (option, index) => (
     <View style={styles.rowContainer} key={option.option_id}>
       <TouchableOpacity
         style={{flex: 1}}
-        onPress={() => this.setSelected(option.option_id)}>
+        onPress={() => setSelected(option.option_id)}>
         <Text style={styles.pollOption}>
           {index + 1}. {option.option_description}
         </Text>
@@ -46,73 +44,67 @@ class PollVote extends Component {
       <RadioButton
         color="#DA552F"
         value={option.option_id}
-        onPress={() => this.setSelected(option.option_id)}
-        status={
-          this.state.selectedID === option.option_id ? 'checked' : 'unchecked'
-        }
+        onPress={() => setSelected(option.option_id)}
+        status={selectedID === option.option_id ? 'checked' : 'unchecked'}
       />
     </View>
   );
 
-  render() {
-    if (this.state.isLoading) {
-      if (this.props.response != null) {
-        if (this.props.response) {
-          Alert.alert(strings.successVote, null, [
-            {
-              text: 'OK',
-              onPress: () => {
-                this.props.navigation.navigate('PollList');
-                this.props.fetchPolls();
-              },
+  if (isLoading) {
+    if (props.response != null) {
+      if (props.response) {
+        Alert.alert(strings.successVote, null, [
+          {
+            text: 'OK',
+            onPress: () => {
+              props.navigation.navigate('PollList');
+              props.fetchPolls();
             },
-          ]);
-        } else if (this.props.error != null) {
-          Alert.alert(this.props.error, null, [
-            {
-              text: 'OK',
-              onPress: () => {
-                this.setState({isLoading: false});
-                this.props.voteResetState();
-              },
+          },
+        ]);
+      } else if (props.error != null) {
+        Alert.alert(props.error, null, [
+          {
+            text: 'OK',
+            onPress: () => {
+              setIsLoading(false);
+              props.voteResetState();
             },
-          ]);
-        }
+          },
+        ]);
       }
-
-      return (
-        <View style={[styles.indicatorContainer, styles.indicatorHorizontal]}>
-          <ActivityIndicator size="large" color="#DA552F" />
-        </View>
-      );
     }
 
     return (
-      <>
-        <View style={[globalStyles.defaultBorder, styles.additionalContainer]}>
-          <Text style={styles.pollTitle}>
-            {this.props.poll.poll_description}
-          </Text>
-        </View>
-        <ScrollView
-          style={[globalStyles.defaultBorder, styles.additionalContainer]}>
-          <RadioButton.Group value={this.state.selectedID}>
-            {this.props.poll.options.map((option, index) =>
-              this.renderButton(option, index),
-            )}
-          </RadioButton.Group>
-        </ScrollView>
-        <TouchableOpacity
-          onPress={() => {
-            this.props.sendVote(this.props.poll.poll_id, this.state.selectedID);
-            this.setState({isLoading: true});
-          }}
-          style={styles.voteButton}>
-          <Text style={styles.voteButtonText}>{strings.sendVote}</Text>
-        </TouchableOpacity>
-      </>
+      <View style={[styles.indicatorContainer, styles.indicatorHorizontal]}>
+        <ActivityIndicator size="large" color="#DA552F" />
+      </View>
     );
   }
+
+  return (
+    <>
+      <View style={[globalStyles.defaultBorder, styles.additionalContainer]}>
+        <Text style={styles.pollTitle}>{props.poll.poll_description}</Text>
+      </View>
+      <ScrollView
+        style={[globalStyles.defaultBorder, styles.additionalContainer]}>
+        <RadioButton.Group value={selectedID}>
+          {props.poll.options.map((option, index) =>
+            renderButton(option, index),
+          )}
+        </RadioButton.Group>
+      </ScrollView>
+      <TouchableOpacity
+        onPress={() => {
+          props.sendVote(props.poll.poll_id, selectedID);
+          setIsLoading(true);
+        }}
+        style={styles.voteButton}>
+        <Text style={styles.voteButtonText}>{strings.sendVote}</Text>
+      </TouchableOpacity>
+    </>
+  );
 }
 
 const mapStateToProps = (state) => {
