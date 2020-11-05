@@ -18,7 +18,7 @@ export const fetchPolls = () => {
         .get('/poll')
         .then((res) => {
           res.ok
-            ? dispatch(fetchPollsSuccess(res.data))
+            ? dispatch(fetchPollsSuccess(res.data.reverse()))
             : dispatch(fetchPollsError(res.data.error));
         })
         .catch((err) => {

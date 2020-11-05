@@ -66,15 +66,11 @@ class PollDetails extends Component {
               chartStyle={styles.chart}
               arrayItems={arrayItems}
             />
-            <Text style={styles.chartFooter}>
-              Clique na cor para detalhes...
-            </Text>
+            <Text style={styles.chartFooter}>{strings.chartFooter}</Text>
           </View>
         ) : (
           <View style={styles.textEmptyContainer}>
-            <Text style={styles.textEmptyVotes}>
-              Esta enquete ainda não tem nenhum voto!
-            </Text>
+            <Text style={styles.textEmptyVotes}>{strings.textEmpty}</Text>
           </View>
         )}
       </>

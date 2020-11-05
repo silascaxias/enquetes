@@ -33,13 +33,13 @@ export default StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: '#DA552F',
-    backgroundColor: '#FFF',
+    backgroundColor: '#DA552F',
     justifyContent: 'center',
     alignItems: 'center',
   },
   voteButtonText: {
     fontSize: 16,
-    color: '#DA552F',
+    color: '#FFF',
     fontWeight: 'bold',
   },
   additionalContainer: {

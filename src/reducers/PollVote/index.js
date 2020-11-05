@@ -2,7 +2,7 @@ import {
   SET_POLL,
   VOTE_SUCCESS,
   VOTE_ERROR,
-  RESET_STATE,
+  VOTE_RESET_STATE,
 } from '../../actions/PollVote/types';
 
 const initialState = {
@@ -26,8 +26,8 @@ export const pollVoteReducer = (state = initialState, action) => {
         ...state,
         error: action.data,
         response: false,
-      }
-    case RESET_STATE:
+      };
+    case VOTE_RESET_STATE:
       return {
         ...state,
         error: null,

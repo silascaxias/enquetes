@@ -9,14 +9,15 @@ import {
   ActivityIndicator,
 } from 'react-native';
 
+import {connect} from 'react-redux';
+import * as strings from './strings';
 import styles from './styles';
 import globalStyles from './../../resources/styles';
-
-import api from '../../network/api';
+import {addResetState, sendPoll} from '../../actions/PollAdd';
 
 class PollAdd extends Component {
   static navigationOptions = {
-    title: 'Nova Enquete',
+    title: strings.title,
   };
 
   state = {
@@ -28,7 +29,7 @@ class PollAdd extends Component {
 
   addOption = () => {
     if (this.state.optionDescription.length === 0) {
-      return Alert.alert('Adicione uma descrição para a opção!');
+      return Alert.alert(strings.withoutDescription);
     }
 
     this.setState({
@@ -38,61 +39,58 @@ class PollAdd extends Component {
     });
   };
 
-  savePoll = async () => {
-    if (this.state.pollDescription === '') {
-      return Alert.alert('Insira um titulo!');
-    }
-    if (this.state.options.length < 2) {
-      return Alert.alert('Insira pelo menos 2 opções!');
-    }
-
-    try {
-      this.setState({isLoading: true});
-
-      const params = {
-        poll_description: this.state.pollDescription,
-        options: this.state.options,
-      };
-
-      const response = await api.post('/poll', JSON.stringify(params));
-
-      if (response.ok) {
-        this.setState({isLoading: false});
-        Alert.alert('Enquete inserida com sucesso!');
-        this.props.navigation.navigate('Home');
-      } else {
-        this.setState({isLoading: false});
-        const serverError = response.data.error;
-        Alert.alert(
-          serverError != null ? serverError : response.originalError.message,
-        );
-      }
-    } catch (err) {
-      Alert.alert(err.error.toString());
-    }
-  };
+  componentDidMount() {
+    this.props.addResetState();
+  }
 
   render() {
-    return this.state.isLoading ? (
-      <View style={[styles.indicatorContainer, styles.indicatorHorizontal]}>
-        <ActivityIndicator size="large" color="#DA552F" />
-      </View>
-    ) : (
+    if (this.state.isLoading) {
+      if (this.props.response != null) {
+        if (this.props.response) {
+          Alert.alert(strings.addSuccess, null, [
+            {
+              text: 'OK',
+              onPress: () => {
+                this.props.navigation.navigate('Home');
+              },
+            },
+          ]);
+        } else if (this.props.error != null) {
+          Alert.alert(this.props.error, null, [
+            {
+              text: 'OK',
+              onPress: () => {
+                this.setState({isLoading: false});
+                this.props.addResetState();
+              },
+            },
+          ]);
+        }
+      }
+
+      return (
+        <View style={[styles.indicatorContainer, styles.indicatorHorizontal]}>
+          <ActivityIndicator size="large" color="#DA552F" />
+        </View>
+      );
+    }
+
+    return (
       <View style={styles.container}>
-        <Text style={styles.fieldDescription}>Titulo:</Text>
+        <Text style={styles.fieldDescription}>{strings.labelTitle}</Text>
         <View style={[globalStyles.defaultBorder, styles.additionalContainer]}>
           <TextInput
             style={styles.addInput}
-            placeholder={'Insira um titulo...'}
+            placeholder={strings.titlePlaceHolder}
             value={this.state.pollDescription}
             onChangeText={(text) => this.setState({pollDescription: text})}
           />
         </View>
-        <Text style={styles.fieldDescription}>Nova Opção:</Text>
+        <Text style={styles.fieldDescription}>{strings.newOption}</Text>
         <View style={[globalStyles.defaultBorder, styles.additionalContainer]}>
           <TextInput
             style={styles.optionInput}
-            placeholder={'Insira uma opção...'}
+            placeholder={strings.optionPlaceHolder}
             value={this.state.optionDescription}
             onChangeText={(text) => this.setState({optionDescription: text})}
           />
@@ -126,14 +124,17 @@ class PollAdd extends Component {
               styles.textEmptyContainer,
             ]}>
             <View style={styles.textEmptyContainer}>
-              <Text style={styles.textEmptyOptions}>Nenhuma opção criada!</Text>
+              <Text style={styles.textEmptyOptions}>
+                {strings.emptyOptions}
+              </Text>
             </View>
           </View>
         )}
 
         <TouchableOpacity
           onPress={() => {
-            this.savePoll();
+            this.props.sendPoll(this.state.pollDescription, this.state.options);
+            this.setState({isLoading: true});
           }}
           style={styles.voteButton}>
           <View
@@ -142,7 +143,7 @@ class PollAdd extends Component {
               styles.additionalContainer,
               styles.buttonSave,
             ]}>
-            <Text style={styles.buttonSaveText}>Salvar</Text>
+            <Text style={styles.buttonSaveText}>{strings.save}</Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -150,4 +151,19 @@ class PollAdd extends Component {
   }
 }
 
-export default PollAdd;
+const mapStateToProps = (state) => {
+  return {
+    error: state.pollAddReducer.error,
+    response: state.pollAddReducer.response,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    sendPoll: (poll_description, options) =>
+      dispatch(sendPoll(poll_description, options)),
+    addResetState: () => dispatch(addResetState()),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(PollAdd);
