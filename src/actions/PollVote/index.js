@@ -1,4 +1,4 @@
-import {SET_POLL, VOTE_SUCCESS, VOTE_ERROR, RESET_STATE, VOTE_RESET_STATE} from './types';
+import {SET_POLL, VOTE_SUCCESS, VOTE_ERROR, VOTE_RESET_STATE} from './types';
 import NetInfo from '@react-native-community/netinfo';
 import api from '../../network/api';
 
